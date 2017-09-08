@@ -32,7 +32,7 @@ public class GetScpDetails {
             content = doc.getElementById("page-content");
             do_foot();
             content.select("div.heritage-emblem").remove();
-            content.select("div#page-rate-widget-box").remove();
+            content.select("div.page-rate-widget-box").remove();
             pic_eles = content.getElementsByClass("scp-image-block");
             content.select("div.scp-image-block").remove();
             foot_text = content.getElementsByClass("footnote-footer");
