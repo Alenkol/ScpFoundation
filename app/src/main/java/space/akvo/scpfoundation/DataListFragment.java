@@ -37,6 +37,8 @@ public class DataListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ScpData scpa = scpList.get(i);
                 MainActivity ma = (MainActivity)getActivity();
+                ma.toolbarText.add(scpa.getScp_nam());
+                ma.changeToolbarText(scpa.getScp_nam());
                 ShowFragment sf = ma.getShow_fragment();
                 ma.putMessage(sf,"url","http://scp-wiki-cn.wikidot.com/"+scpa.getScp_id());
                 ma.changeFragment(sf);

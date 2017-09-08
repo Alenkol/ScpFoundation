@@ -41,21 +41,21 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     public int state;
     private AccountHeader headerResult;
-
+    public ArrayList<String> toolbarText = new ArrayList<String>();
     public ArrayList<String> back_url = new ArrayList();
     private Drawer result;
-    //Bundle savedInstanceState;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbarText.add("SCP系列I");
         toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle(toolbarText.get(0).toString());
         setSupportActionBar(toolbar);
         main_fragment = new DataListFragment();
         changeFragment(main_fragment);
-        //this.savedInstanceState = savedInstanceState;
         headerResult = getAccountHeader(savedInstanceState);
         result = getDrawer(savedInstanceState);
     }
@@ -112,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
                                     .setMessage("输入项不得为空！")
                                     .setPositiveButton("确定",null).show();
                         }else {
-//                            Intent it = new Intent(MainActivity.this,ShowActivity.class);
-//                            it.putExtra("url",get_scp_url+text_scp);
-//                            startActivity(it);
                             open_url = new String(get_scp_url+text_scp);
                             show_fragment = new ShowFragment();
                             putMessage(show_fragment,"url",open_url);
@@ -185,26 +182,39 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 11) {
+                                toolbarText.add("SCP系列I");
+                                changeToolbarText("SCP系列I");
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 264,948");
                             } else if(drawerItem.getIdentifier() == 12){
+                                toolbarText.add("SCP系列II");
+                                changeToolbarText("SCP系列II");
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 1212,824");
                             }else if(drawerItem.getIdentifier() == 13){
+                                toolbarText.add("SCP系列III");
+                                changeToolbarText("SCP系列III");
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 2036,433");
                             } else if(drawerItem.getIdentifier() == 14){
+                                toolbarText.add("SCP系列IV");
+                                changeToolbarText("SCP系列IV");
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 2469,92");
                             }else if(drawerItem.getIdentifier() == 15){
+                                toolbarText.add("SCP-CN系列");
+                                changeToolbarText("SCP-CN系列");
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 0,264");
                             }else if (drawerItem.getIdentifier() == 4) {
+                                toolbarText.add("关于基金会");
+                                changeToolbarText("关于基金会");
                                 toolbar.setVisibility(View.GONE);
                                 changeFragment(new AboutFragment());
                             }else if(drawerItem.getIdentifier() == 3){
+                                toolbarText.add("设定中心");
+                                changeToolbarText("设定中心");
                                 hub_fragment = new HubFragment();
-                                toolbar.setTitle("设定中心");
                                 changeFragment(hub_fragment);
                             }
                         }
@@ -216,43 +226,16 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
-//    public void onBackPressed(){
-//        if (!back_url.isEmpty()){
-//            show_fragment.set_tz_scp_url(main_scp_url+back_url.get(back_url.size()-1));
-//            show_fragment.show_new();
-//            back_url.remove(back_url.size()-1);
-//        }else{
-//            finish();
-//        }
-//    }
-
+    public void changeToolbarText(String text){
+        toolbar.setTitle(text);
+    }
     public ShowFragment getShow_fragment(){
         return new ShowFragment();
     }
 
-
-//    private Handler handler = new Handler(){
-//        @Override
-//        public void handleMessage(Message msg) {
-//            switch (msg.what){
-//                case 1:
-//
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    };
-
-
-//    public void setSlide(){
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                headerResult = getAccountHeader(savedInstanceState);
-//                result = getDrawer(savedInstanceState);
-//            }
-//        }).start();
-//    }
+    public void onBackPressed(){
+        super.onBackPressed();
+        changeToolbarText(toolbarText.get(toolbarText.size()-2).toString());
+    }
 }
 
