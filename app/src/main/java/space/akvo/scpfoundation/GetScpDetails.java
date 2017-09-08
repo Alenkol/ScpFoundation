@@ -61,13 +61,10 @@ public class GetScpDetails {
             if(pic_eles.hasText()) {
                 content.append("<p><strong>图册：</strong></p> " + pic_eles.toString());
             }
-            //content.append(pic_eles.html());
             String returns = content.html().toString().replaceAll("<p>«.+»</p>", "");
             returns = returns.replaceAll("</?blockquote>|<br>", "");
             returns = returns.replace("作者信息</span>", "作者信息： </span>");
 
-            //returns = returns.replace("<br />","");
-            //System.out.println(returns);
             return returns;
         }else{
             return null;
@@ -88,14 +85,4 @@ public class GetScpDetails {
         return take_foot();
     }
 
-//    public String getSth(String url){
-//        this.takeDoc(url);
-//        for (Element pic_ele:pic_eles){
-//            pic_src.add(pic_ele.select("img").attr("src"));
-//            pic_text.add(pic_ele.getElementsByTag("p").text());
-//        }
-//        String returns= content.html().toString().replaceAll("<p>«.+»</p>","");
-//        returns = "> 编号：SCP-173\n\n333\n\n444";
-//        return returns;
-//    }
 }
