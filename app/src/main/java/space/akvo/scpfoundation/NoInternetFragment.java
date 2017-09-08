@@ -12,6 +12,8 @@ import android.widget.TextView;
  */
 
 public class NoInternetFragment extends Fragment{
+
+    public String toolbarText;
     private TextView tx_no_inter;
 
     @Override

@@ -26,6 +26,7 @@ public class HubFragment extends Fragment {
     private List<ScpRecyData> scpRecyList = new ArrayList<>();
     private ScpRecyAdapter adapter;
     MainActivity ma;
+    public String toolbarText;
     View view;
     LinearLayout ly;
     LinearLayout ln;
@@ -36,6 +37,8 @@ public class HubFragment extends Fragment {
     }
 
     public void onStart(){
+        ma = (MainActivity)getActivity();
+        ma.changeToolbarText(toolbarText);
         super.onStart();
         initScpRecyList();
         RecyclerView rv = (RecyclerView)view.findViewById(R.id.hub_recycler);

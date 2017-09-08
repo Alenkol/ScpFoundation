@@ -34,7 +34,8 @@ public class ShowFragment extends Fragment {
     private ArrayList footer_list = new ArrayList();
     private String tz_scp_url = new String();
     public int state;
-
+    public String toolbarText;
+    public MainActivity ma;
     public void onStart(){
         super.onStart();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
@@ -42,6 +43,7 @@ public class ShowFragment extends Fragment {
     }
 
     public void getScpDetail(){
+        ma = (MainActivity)getActivity();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -54,16 +56,17 @@ public class ShowFragment extends Fragment {
                     message.what = 1;
                     handler.sendMessage(message);
                 }else {
+                    toolbarText = "无网络";
                     getActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.main_container, new NoInternetFragment(), null)
                             .addToBackStack(null)
                             .commit();
-                    MainActivity activity=(MainActivity)getActivity();
-                    activity.setState(1);
+                    ma.setState(1);
                 }
             }
         }).start();
+        ma.changeToolbarText(toolbarText);
     }
 
     @Override

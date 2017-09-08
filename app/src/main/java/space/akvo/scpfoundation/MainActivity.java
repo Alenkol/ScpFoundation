@@ -41,20 +41,20 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     public int state;
     private AccountHeader headerResult;
-    public ArrayList<String> toolbarText = new ArrayList<String>();
     public ArrayList<String> back_url = new ArrayList();
     private Drawer result;
+    public String toolbarText;
+    public AboutFragment aboutFragment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbarText.add("SCP系列I");
         toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle(toolbarText.get(0).toString());
         setSupportActionBar(toolbar);
         main_fragment = new DataListFragment();
+        main_fragment.toolbarText = "SCP系列I";
         changeFragment(main_fragment);
         headerResult = getAccountHeader(savedInstanceState);
         result = getDrawer(savedInstanceState);
@@ -126,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_container,fragment);
-        fragmentTransaction.addToBackStack(null);
+        if (fragment != main_fragment) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 
@@ -173,48 +175,36 @@ public class MainActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //check if the drawerItem is set.
-                        //there are different reasons for the drawerItem to be null
-                        //--> click on the header
-                        //--> click on the footer
-                        //those items don't contain a drawerItem
 
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 11) {
-                                toolbarText.add("SCP系列I");
-                                changeToolbarText("SCP系列I");
+                                main_fragment.toolbarText = "SCP系列I";
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 264,948");
                             } else if(drawerItem.getIdentifier() == 12){
-                                toolbarText.add("SCP系列II");
-                                changeToolbarText("SCP系列II");
+                                main_fragment.toolbarText = "SCP系列II";
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 1212,824");
                             }else if(drawerItem.getIdentifier() == 13){
-                                toolbarText.add("SCP系列III");
-                                changeToolbarText("SCP系列III");
+                                main_fragment.toolbarText = "SCP系列III";
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 2036,433");
                             } else if(drawerItem.getIdentifier() == 14){
-                                toolbarText.add("SCP系列IV");
-                                changeToolbarText("SCP系列IV");
+                                main_fragment.toolbarText = "SCP系列IV";
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 2469,92");
                             }else if(drawerItem.getIdentifier() == 15){
-                                toolbarText.add("SCP-CN系列");
-                                changeToolbarText("SCP-CN系列");
+                                main_fragment.toolbarText = "SCP-CN系列";
                                 changeFragment(main_fragment);
                                 main_fragment.setList("select * from Y limit 0,264");
                             }else if (drawerItem.getIdentifier() == 4) {
-                                toolbarText.add("关于基金会");
-                                changeToolbarText("关于基金会");
-                                toolbar.setVisibility(View.GONE);
-                                changeFragment(new AboutFragment());
+                                aboutFragment = new AboutFragment();
+                                aboutFragment.toolbarText = "关于基金会";
+                                changeFragment(aboutFragment);
                             }else if(drawerItem.getIdentifier() == 3){
-                                toolbarText.add("设定中心");
-                                changeToolbarText("设定中心");
                                 hub_fragment = new HubFragment();
+                                hub_fragment.toolbarText = "设定中心";
                                 changeFragment(hub_fragment);
                             }
                         }
@@ -233,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
         return new ShowFragment();
     }
 
-    public void onBackPressed(){
-        super.onBackPressed();
-        changeToolbarText(toolbarText.get(toolbarText.size()-2).toString());
-    }
+//    public void onBackPressed(){
+//        super.onBackPressed();
+//    }
 }
 

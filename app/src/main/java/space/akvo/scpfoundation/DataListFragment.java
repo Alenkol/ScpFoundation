@@ -27,20 +27,23 @@ public class DataListFragment extends Fragment {
     private String s;
     private ArrayList getDataArr;
     private Handler handler;
+    public String toolbarText;
+    public MainActivity ma;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_data_list,container,false);
         lv = (ListView)view.findViewById(R.id.scp_list);
         setList("select * from Y limit 264,948");
+        ma = (MainActivity)getActivity();
+        ma.changeToolbarText(toolbarText);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ScpData scpa = scpList.get(i);
-                MainActivity ma = (MainActivity)getActivity();
-                ma.toolbarText.add(scpa.getScp_nam());
-                ma.changeToolbarText(scpa.getScp_nam());
                 ShowFragment sf = ma.getShow_fragment();
                 ma.show_fragment = sf;
+                sf.toolbarText = scpa.getScp_nam();
                 ma.open_url = "http://scp-wiki-cn.wikidot.com/"+scpa.getScp_id();
                 ma.putMessage(sf,"url","http://scp-wiki-cn.wikidot.com/"+scpa.getScp_id());
                 ma.changeFragment(sf);
