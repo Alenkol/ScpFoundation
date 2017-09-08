@@ -40,6 +40,8 @@ public class DataListFragment extends Fragment {
                 ma.toolbarText.add(scpa.getScp_nam());
                 ma.changeToolbarText(scpa.getScp_nam());
                 ShowFragment sf = ma.getShow_fragment();
+                ma.show_fragment = sf;
+                ma.open_url = "http://scp-wiki-cn.wikidot.com/"+scpa.getScp_id();
                 ma.putMessage(sf,"url","http://scp-wiki-cn.wikidot.com/"+scpa.getScp_id());
                 ma.changeFragment(sf);
             }
