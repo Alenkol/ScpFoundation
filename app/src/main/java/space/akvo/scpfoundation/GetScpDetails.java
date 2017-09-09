@@ -33,6 +33,7 @@ public class GetScpDetails {
             do_foot();
             content.select("div.heritage-emblem").remove();
             content.select("div.page-rate-widget-box").remove();
+            content.select("a[href=javascript:;]").remove();
             pic_eles = content.getElementsByClass("scp-image-block");
             content.select("div.scp-image-block").remove();
             foot_text = content.getElementsByClass("footnote-footer");
@@ -64,7 +65,6 @@ public class GetScpDetails {
             String returns = content.html().toString().replaceAll("<p>«.+»</p>", "");
             returns = returns.replaceAll("</?blockquote>|<br>", "");
             returns = returns.replace("作者信息</span>", "作者信息： </span>");
-
             return returns;
         }else{
             return null;

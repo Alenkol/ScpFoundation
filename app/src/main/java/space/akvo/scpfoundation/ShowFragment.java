@@ -18,6 +18,11 @@ import android.widget.TextView;
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.callback.OnUrlClickListener;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 
 /**
@@ -36,12 +41,29 @@ public class ShowFragment extends Fragment {
     public int state;
     public String toolbarText;
     public MainActivity ma;
+    private Document doc;
+    public ArrayList<String> backUrlList;
+    public ArrayList<String> backTitleList;
     public void onStart(){
         ma = (MainActivity)getActivity();
         super.onStart();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
         ma.backState = 1;
         getScpDetail();
+        if (backUrlList == null){
+            backUrlList = new ArrayList<String>();
+            backUrlList.add(open_url.replace(main_scp_url,""));
+        }else {
+            backUrlList.add(open_url.replace(main_scp_url,""));
+        }
+        if (backTitleList == null){
+            backTitleList = new ArrayList<String>();
+            backTitleList.add(ma.toolbar.getTitle().toString());
+        }else {
+            backTitleList.add(ma.toolbar.getTitle().toString());
+        }
+        System.out.println(backUrlList.toString());
+        System.out.println(backTitleList.toString());
     }
 
     public void getScpDetail(){
@@ -92,8 +114,23 @@ public class ShowFragment extends Fragment {
                                         new AlertDialog.Builder(getContext())
                                                 .setMessage(footer_list.get(Integer.parseInt(url.replace("footnoteref-", "")) - 1).toString()).show();
                                     }else if(url.matches("/.+?")){
+                                        if (backUrlList == null){
+                                            backUrlList = new ArrayList<String>();
+                                            backUrlList.add(open_url.replace(main_scp_url,""));
+                                        }else {
+                                            backUrlList.add(open_url.replace(main_scp_url,""));
+                                        }
+                                        if (backTitleList == null){
+                                            backTitleList = new ArrayList<String>();
+                                            backTitleList.add(ma.toolbar.getTitle().toString());
+                                        }else {
+                                            backTitleList.add(ma.toolbar.getTitle().toString());
+                                        }
                                         tz_scp_url = main_scp_url+url;
                                         open_url = tz_scp_url;
+                                        doc = Jsoup.parse(scp_detail);
+                                        getTitle(url);
+                                        ma.setState(2);
                                         show_new();
                                     }
                                     return false;
@@ -131,6 +168,10 @@ public class ShowFragment extends Fragment {
                 handler.sendMessage(message);
             }
         }).start();
+    }
+
+    public void getTitle(String s){
+        ma.changeToolbarText(doc.select("a[href="+s+"]").text());
     }
 
     public void set_tz_scp_url(String url){

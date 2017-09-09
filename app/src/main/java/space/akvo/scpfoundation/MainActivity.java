@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     public ShowFragment show_fragment;
     public HubFragment hub_fragment;
     Toolbar toolbar;
-    public int state;
     private AccountHeader headerResult;
     public ArrayList<String> back_url = new ArrayList();
     private Drawer result;
@@ -142,11 +141,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setState(int i){
-        this.state = i;
+        this.backState = i;
     }
 
     public int getState(){
-        return this.state;
+        return this.backState;
     }
 
     public AccountHeader getAccountHeader(Bundle savedInstanceState){
@@ -241,8 +240,20 @@ public class MainActivity extends AppCompatActivity {
                 this.finish();
                 System.exit(0);
             }
-        }else {
+        }else if(backState == 1){
             super.onBackPressed();
+        } else if (backState == 2){
+            show_fragment.set_tz_scp_url("http://scp-wiki-cn.wikidot.com/"+show_fragment.backUrlList.get(show_fragment.backUrlList.size()-1));
+            show_fragment.show_new();
+            changeToolbarText(show_fragment.backTitleList.get(show_fragment.backTitleList.size()-1));
+            show_fragment.backUrlList.remove(show_fragment.backUrlList.size()-1);
+            show_fragment.backTitleList.remove(show_fragment.backTitleList.size()-1);
+            if (show_fragment.backUrlList.size()==1){
+                backState = 1;
+                show_fragment.backUrlList = null;
+                show_fragment.backTitleList = null;
+            }
+            //super.onBackPressed();
         }
     }
 }
