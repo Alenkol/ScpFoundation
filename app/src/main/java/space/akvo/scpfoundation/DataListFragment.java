@@ -36,7 +36,6 @@ public class DataListFragment extends Fragment {
         lv = (ListView)view.findViewById(R.id.scp_list);
         setList("select * from Y limit 264,948");
         ma = (MainActivity)getActivity();
-        ma.changeToolbarText(toolbarText);
         ma.backState = 0;
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,6 +71,11 @@ public class DataListFragment extends Fragment {
             }
         };
         return view;
+    }
+
+    public void onStart(){
+        super.onStart();
+        ma.changeToolbarText(toolbarText);
     }
 
     public void setList(final String s){

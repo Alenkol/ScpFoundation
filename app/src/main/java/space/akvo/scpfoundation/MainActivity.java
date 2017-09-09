@@ -184,22 +184,27 @@ public class MainActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 11) {
                                 main_fragment.toolbarText = "SCP系列I";
                                 changeFragment(main_fragment);
+                                changeToolbarText("SCP系列I");
                                 main_fragment.setList("select * from Y limit 264,948");
                             } else if(drawerItem.getIdentifier() == 12){
                                 main_fragment.toolbarText = "SCP系列II";
                                 changeFragment(main_fragment);
+                                changeToolbarText("SCP系列II");
                                 main_fragment.setList("select * from Y limit 1212,824");
                             }else if(drawerItem.getIdentifier() == 13){
                                 main_fragment.toolbarText = "SCP系列III";
                                 changeFragment(main_fragment);
+                                changeToolbarText("SCP系列III");
                                 main_fragment.setList("select * from Y limit 2036,433");
                             } else if(drawerItem.getIdentifier() == 14){
                                 main_fragment.toolbarText = "SCP系列IV";
                                 changeFragment(main_fragment);
+                                changeToolbarText("SCP系列IV");
                                 main_fragment.setList("select * from Y limit 2469,92");
                             }else if(drawerItem.getIdentifier() == 15){
                                 main_fragment.toolbarText = "SCP-CN系列";
                                 changeFragment(main_fragment);
+                                changeToolbarText("SCP-CN系列");
                                 main_fragment.setList("select * from Y limit 0,264");
                             }else if (drawerItem.getIdentifier() == 4) {
                                 aboutFragment = new AboutFragment();
