@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private Drawer result;
     public String toolbarText;
     public AboutFragment aboutFragment;
+    private long mPressedTime = 0;
+    public int backState;
 
 
     @Override
@@ -223,8 +226,19 @@ public class MainActivity extends AppCompatActivity {
         return new ShowFragment();
     }
 
-//    public void onBackPressed(){
-//        super.onBackPressed();
-//    }
+    public void onBackPressed() {
+        if (backState == 0) {
+            long mNowTime = System.currentTimeMillis();
+            if ((mNowTime - mPressedTime) > 3000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mPressedTime = mNowTime;
+            } else {
+                this.finish();
+                System.exit(0);
+            }
+        }else {
+            super.onBackPressed();
+        }
+    }
 }
 

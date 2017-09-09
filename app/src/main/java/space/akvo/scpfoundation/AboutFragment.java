@@ -13,9 +13,15 @@ import android.view.ViewGroup;
 public class AboutFragment extends Fragment {
 
     public String toolbarText;
+    private MainActivity ma;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_about,container,false);
         return view;
+    }
+    public void onStart(){
+        super.onStart();
+        ma = (MainActivity)getActivity();
+        ma.backState = 0;
     }
 }

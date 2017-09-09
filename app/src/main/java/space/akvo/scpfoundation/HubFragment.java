@@ -39,6 +39,7 @@ public class HubFragment extends Fragment {
     public void onStart(){
         ma = (MainActivity)getActivity();
         ma.changeToolbarText(toolbarText);
+        ma.backState = 0;
         super.onStart();
         initScpRecyList();
         RecyclerView rv = (RecyclerView)view.findViewById(R.id.hub_recycler);

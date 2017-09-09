@@ -37,13 +37,14 @@ public class ShowFragment extends Fragment {
     public String toolbarText;
     public MainActivity ma;
     public void onStart(){
+        ma = (MainActivity)getActivity();
         super.onStart();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
+        ma.backState = 1;
         getScpDetail();
     }
 
     public void getScpDetail(){
-        ma = (MainActivity)getActivity();
         new Thread(new Runnable() {
             @Override
             public void run() {

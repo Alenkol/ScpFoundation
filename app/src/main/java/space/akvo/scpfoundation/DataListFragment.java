@@ -37,6 +37,7 @@ public class DataListFragment extends Fragment {
         setList("select * from Y limit 264,948");
         ma = (MainActivity)getActivity();
         ma.changeToolbarText(toolbarText);
+        ma.backState = 0;
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
