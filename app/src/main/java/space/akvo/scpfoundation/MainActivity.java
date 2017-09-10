@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     public AboutFragment aboutFragment;
     private long mPressedTime = 0;
     public int backState;
+    public Snackbar snackBar;
 
 
     @Override
@@ -229,31 +233,29 @@ public class MainActivity extends AppCompatActivity {
     public ShowFragment getShow_fragment(){
         return new ShowFragment();
     }
+    public void showSnackBar(Snackbar sb){
+        View v;
+        v = sb.getView();
+        v.setBackgroundColor(getResources().getColor(R.color.primary));
+        ((TextView)v.findViewById(R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.icons));
+        ((Button)v.findViewById(R.id.snackbar_action)).setTextColor(getResources().getColor(R.color.icons));
+        sb.show();
+    }
 
     public void onBackPressed() {
         if (backState == 0) {
             long mNowTime = System.currentTimeMillis();
             if ((mNowTime - mPressedTime) > 3000) {
-                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                snackBar = Snackbar.make(toolbar,"再按一次退出程序",Snackbar.LENGTH_SHORT);
+                showSnackBar(snackBar);
                 mPressedTime = mNowTime;
             } else {
                 this.finish();
                 System.exit(0);
             }
-        }else if(backState == 1){
+        }else{
             super.onBackPressed();
-        } else if (backState == 2){
-            show_fragment.set_tz_scp_url("http://scp-wiki-cn.wikidot.com/"+show_fragment.backUrlList.get(show_fragment.backUrlList.size()-1));
-            show_fragment.show_new();
-            changeToolbarText(show_fragment.backTitleList.get(show_fragment.backTitleList.size()-1));
-            show_fragment.backUrlList.remove(show_fragment.backUrlList.size()-1);
-            show_fragment.backTitleList.remove(show_fragment.backTitleList.size()-1);
-            if (show_fragment.backUrlList.size()==1){
-                backState = 1;
-                show_fragment.backUrlList = null;
-                show_fragment.backTitleList = null;
-            }
-            //super.onBackPressed();
         }
     }
 }

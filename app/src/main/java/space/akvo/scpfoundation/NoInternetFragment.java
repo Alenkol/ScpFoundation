@@ -15,6 +15,7 @@ public class NoInternetFragment extends Fragment{
 
     public String toolbarText;
     private TextView tx_no_inter;
+    MainActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class NoInternetFragment extends Fragment{
         tx_no_inter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity activity=(MainActivity)getActivity();
+                activity=(MainActivity)getActivity();
                 switch (activity.getState()){
                     case 1:
                         activity.putMessage(activity.show_fragment,"url",activity.open_url);

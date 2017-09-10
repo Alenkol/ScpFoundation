@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,25 +46,12 @@ public class ShowFragment extends Fragment {
     public ArrayList<String> backUrlList;
     public ArrayList<String> backTitleList;
     public void onStart(){
-        ma = (MainActivity)getActivity();
         super.onStart();
+        ma = (MainActivity)getActivity();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
         ma.backState = 1;
+        ma.changeToolbarText(toolbarText);
         getScpDetail();
-        if (backUrlList == null){
-            backUrlList = new ArrayList<String>();
-            backUrlList.add(open_url.replace(main_scp_url,""));
-        }else {
-            backUrlList.add(open_url.replace(main_scp_url,""));
-        }
-        if (backTitleList == null){
-            backTitleList = new ArrayList<String>();
-            backTitleList.add(ma.toolbar.getTitle().toString());
-        }else {
-            backTitleList.add(ma.toolbar.getTitle().toString());
-        }
-        System.out.println(backUrlList.toString());
-        System.out.println(backTitleList.toString());
     }
 
     public void getScpDetail(){
@@ -79,17 +67,23 @@ public class ShowFragment extends Fragment {
                     message.what = 1;
                     handler.sendMessage(message);
                 }else {
-                    toolbarText = "无网络";
                     getActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.main_container, new NoInternetFragment(), null)
                             .addToBackStack(null)
                             .commit();
-                    ma.setState(1);
+                    ma.setState(0);
+                    ma.snackBar = Snackbar.make(ma.toolbar,"网络连接失败！",Snackbar.LENGTH_LONG).setAction("刷新", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ma.putMessage(ma.show_fragment,"url",ma.open_url);
+                            ma.changeFragment(ma.show_fragment);
+                        }
+                    });
+                    ma.showSnackBar(ma.snackBar);
                 }
             }
         }).start();
-        ma.changeToolbarText(toolbarText);
     }
 
     @Override
@@ -114,24 +108,11 @@ public class ShowFragment extends Fragment {
                                         new AlertDialog.Builder(getContext())
                                                 .setMessage(footer_list.get(Integer.parseInt(url.replace("footnoteref-", "")) - 1).toString()).show();
                                     }else if(url.matches("/.+?")){
-                                        if (backUrlList == null){
-                                            backUrlList = new ArrayList<String>();
-                                            backUrlList.add(open_url.replace(main_scp_url,""));
-                                        }else {
-                                            backUrlList.add(open_url.replace(main_scp_url,""));
-                                        }
-                                        if (backTitleList == null){
-                                            backTitleList = new ArrayList<String>();
-                                            backTitleList.add(ma.toolbar.getTitle().toString());
-                                        }else {
-                                            backTitleList.add(ma.toolbar.getTitle().toString());
-                                        }
                                         tz_scp_url = main_scp_url+url;
                                         open_url = tz_scp_url;
                                         doc = Jsoup.parse(scp_detail);
                                         getTitle(url);
-                                        ma.setState(2);
-                                        show_new();
+                                        getScpDetail();
                                     }
                                     return false;
                                 }
@@ -144,37 +125,8 @@ public class ShowFragment extends Fragment {
         }
     };
 
-    private void add_back_url(String url){
-        MainActivity activity = (MainActivity)getActivity();
-        if (activity.back_url.size()==7){
-            activity.back_url.remove(0);
-            activity.back_url.add(url);
-        }else {
-            activity.back_url.add(url);
-        }
-    }
-
-    public void show_new(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GetScpDetails gsd = new GetScpDetails();
-                add_back_url(tz_scp_url);
-                gsd.execute(tz_scp_url);
-                scp_detail = gsd.getSth();
-                footer_list = gsd.get_footer();
-                Message message = new Message();
-                message.what = 1;
-                handler.sendMessage(message);
-            }
-        }).start();
-    }
-
     public void getTitle(String s){
         ma.changeToolbarText(doc.select("a[href="+s+"]").text());
     }
 
-    public void set_tz_scp_url(String url){
-        tz_scp_url = url;
-    }
 }
