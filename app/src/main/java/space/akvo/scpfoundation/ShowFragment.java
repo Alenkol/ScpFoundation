@@ -51,15 +51,13 @@ public class ShowFragment extends Fragment {
         super.onStart();
         ma = (MainActivity) getActivity();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
-
+        ma.setState(1);
         ma.changeToolbarText(toolbarText);
         ma.sbs = new StoreBacks();
         getScpDetail();
 
         ma.sbs.addBack(ma.toolbar.getTitle().toString(), open_url);
         System.out.println(ma.sbs.getAllUrls()+"\n"+ma.sbs.getAllTitles());
-//        sbs.addBack(ma.toolbar.getTitle().toString(), open_url);
-//        System.out.println(sbs.getBack()[0]+"55555"+sbs.getBack()[1]);
     }
 
     public void getScpDetail() {
@@ -109,7 +107,6 @@ public class ShowFragment extends Fragment {
                         }
                     });
                     ma.showSnackBar(snackBar);
-                    ma.swipeRefresh.setEnabled(false);
                     break;
                 case 1:
                     canAdd = true;
@@ -117,15 +114,6 @@ public class ShowFragment extends Fragment {
                             urlClick(new OnUrlClickListener() {
                                 @Override
                                 public boolean urlClicked(String url) {
-                                    //ma.setState(2);
-
-
-//                                    if (ma.sbs.getBackSize() == 1){
-//                                        ma.setState(1);
-//                                    }else {
-//                                        System.out.println(ma.sbs.getBack()[0] + "55555" + ma.sbs.getBack()[1]);
-//                                    }
-
                                     if (url.contains("footnoteref-")) {
                                         new AlertDialog.Builder(getContext())
                                                 .setMessage(footer_list.get(Integer.parseInt(url.replace("footnoteref-", "")) - 1).toString()).show();

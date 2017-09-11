@@ -64,14 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        swipeRefresh = findViewById(R.id.swipe_refresh);
-        swipeRefresh.setEnabled(false);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
         sbs = new StoreBacks();
         main_fragment = new DataListFragment();
         main_fragment.toolbarText = "SCP系列I";
@@ -287,14 +279,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void refresh(){
-            snackBar = Snackbar.make(toolbar, "刷新中。。。", Snackbar.LENGTH_LONG);
-            showSnackBar(snackBar);
-        if (nowFragment.getClass() == ShowFragment.class) {
-
-        }
-    }
-
 }
 
