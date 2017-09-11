@@ -24,9 +24,9 @@ public class ScpAdapter extends ArrayAdapter<ScpData> {
     public View getView(int position, View convertView, ViewGroup parent){
         ScpData sd = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(id,parent,false);
-        TextView scp_ids = (TextView)view.findViewById(R.id.scp_id);
-        TextView scp_name = (TextView)view.findViewById(R.id.scp_name);
-        TextView scp_level = (TextView)view.findViewById(R.id.scp_level);
+        TextView scp_ids = view.findViewById(R.id.scp_id);
+        TextView scp_name = view.findViewById(R.id.scp_name);
+        TextView scp_level = view.findViewById(R.id.scp_level);
         scp_ids.setText(sd.getScp_id());
         scp_name.setText(sd.getScp_nam());
         scp_level.setText(sd.getScp_lev());

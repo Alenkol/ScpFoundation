@@ -26,9 +26,9 @@ public class ScpRecyAdapter extends RecyclerView.Adapter<ScpRecyAdapter.ViewHold
         public ViewHolder(View view){
             super(view);
             linearLayout = (LinearLayout) view;
-            tv1 = (TextView)view.findViewById(R.id.card_tit);
-            tv2 = (TextView)view.findViewById(R.id.card_sub);
-            tv3 = (TextView)view.findViewById(R.id.card_des);
+            tv1 = view.findViewById(R.id.card_tit);
+            tv2 = view.findViewById(R.id.card_sub);
+            tv3 = view.findViewById(R.id.card_des);
 
         }
     }

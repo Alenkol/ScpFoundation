@@ -42,7 +42,7 @@ public class HubFragment extends Fragment {
         ma.backState = 0;
         super.onStart();
         initScpRecyList();
-        RecyclerView rv = (RecyclerView)view.findViewById(R.id.hub_recycler);
+        RecyclerView rv = view.findViewById(R.id.hub_recycler);
         rv.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ScpRecyAdapter(scpRecyList);
         rv.setAdapter(adapter);

@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -51,17 +52,31 @@ public class MainActivity extends AppCompatActivity {
     private long mPressedTime = 0;
     public int backState;
     public Snackbar snackBar;
+    public SwipeRefreshLayout swipeRefresh;
+    public int listNum = 0;
+    public Fragment nowFragment;
+    public StoreBacks sbs;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        swipeRefresh = findViewById(R.id.swipe_refresh);
+        swipeRefresh.setEnabled(false);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        sbs = new StoreBacks();
         main_fragment = new DataListFragment();
         main_fragment.toolbarText = "SCP系列I";
         changeFragment(main_fragment);
+        nowFragment = main_fragment;
         headerResult = getAccountHeader(savedInstanceState);
         result = getDrawer(savedInstanceState);
     }
@@ -185,26 +200,31 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 11) {
+                                listNum = 0;
                                 main_fragment.toolbarText = "SCP系列I";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列I");
                                 main_fragment.setList("select * from Y limit 264,948");
                             } else if(drawerItem.getIdentifier() == 12){
+                                listNum = 1;
                                 main_fragment.toolbarText = "SCP系列II";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列II");
                                 main_fragment.setList("select * from Y limit 1212,824");
                             }else if(drawerItem.getIdentifier() == 13){
+                                listNum = 3;
                                 main_fragment.toolbarText = "SCP系列III";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列III");
                                 main_fragment.setList("select * from Y limit 2036,433");
                             } else if(drawerItem.getIdentifier() == 14){
+                                listNum = 4;
                                 main_fragment.toolbarText = "SCP系列IV";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列IV");
                                 main_fragment.setList("select * from Y limit 2469,92");
                             }else if(drawerItem.getIdentifier() == 15){
+                                listNum = 5;
                                 main_fragment.toolbarText = "SCP-CN系列";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP-CN系列");
@@ -254,9 +274,27 @@ public class MainActivity extends AppCompatActivity {
                 this.finish();
                 System.exit(0);
             }
-        }else{
+        }else if (backState == 1){
             super.onBackPressed();
+        }else if (backState == 2){
+            String[] a = sbs.getBack();
+            toolbar.setTitle(a[0]);
+            show_fragment.setOpenUrl(a[1]);
+            show_fragment.getScpDetail();
+            sbs.removeBack();
+            if (sbs.getBackSize()==1){
+                setState(1);
+            }
         }
     }
+
+    public void refresh(){
+            snackBar = Snackbar.make(toolbar, "刷新中。。。", Snackbar.LENGTH_LONG);
+            showSnackBar(snackBar);
+        if (nowFragment.getClass() == ShowFragment.class) {
+
+        }
+    }
+
 }
 

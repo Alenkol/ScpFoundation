@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -33,7 +34,7 @@ public class DataListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_data_list,container,false);
-        lv = (ListView)view.findViewById(R.id.scp_list);
+        lv = view.findViewById(R.id.scp_list);
         setList("select * from Y limit 264,948");
         ma = (MainActivity)getActivity();
         ma.backState = 0;
@@ -49,6 +50,7 @@ public class DataListFragment extends Fragment {
                 ma.changeFragment(sf);
             }
         });
+
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
