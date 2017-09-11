@@ -9,11 +9,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ScrollingView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.zzhoujay.richtext.RichText;
@@ -35,6 +38,8 @@ public class ShowFragment extends Fragment {
     final String main_scp_url = "http://scp-wiki-cn.wikidot.com";
     private RichText richText;
     private TextView scp_detail_tx;
+    private ProgressBar progressBar;
+    private ScrollView scrollView;
     private String open_url;
     private String scp_detail;
     private ArrayList footer_list = new ArrayList();
@@ -48,7 +53,10 @@ public class ShowFragment extends Fragment {
     public boolean canAdd;
 
     public void onStart() {
+        progressBar = getActivity().findViewById(R.id.progressBar);
+        scrollView = getActivity().findViewById(R.id.scroll);
         super.onStart();
+        progressBar.setVisibility(View.VISIBLE);
         ma = (MainActivity) getActivity();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
         ma.setState(1);
@@ -99,7 +107,9 @@ public class ShowFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    richText = RichText.from("").into(scp_detail_tx);
+                    scrollView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    //richText = RichText.from("").into(scp_detail_tx);
                     snackBar = Snackbar.make(ma.toolbar, "网络连接失败！", Snackbar.LENGTH_INDEFINITE).setAction("刷新", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -110,6 +120,8 @@ public class ShowFragment extends Fragment {
                     break;
                 case 1:
                     canAdd = true;
+                    progressBar.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.VISIBLE);
                     richText = RichText.from(scp_detail).
                             urlClick(new OnUrlClickListener() {
                                 @Override
@@ -125,6 +137,8 @@ public class ShowFragment extends Fragment {
                                             ma.sbs.addBack(ma.toolbar.getTitle().toString(), open_url);
                                         }
                                         canAdd = false;
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        scrollView.setVisibility(View.GONE);
                                         getScpDetail();
                                     }
                                     return false;
