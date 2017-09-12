@@ -27,10 +27,12 @@ public class DataListFragment extends Fragment {
     private readDatabase rd;
     private int listNum = 0;
     public String s;
+    public String t;
     private ArrayList getDataArr;
     private Handler handler;
     public String toolbarText;
     public MainActivity ma;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -109,7 +111,14 @@ public class DataListFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getDataArr = rd.reDa(s);
+
+                if (ma.global == null){
+                    ma.global = new Global();
+                }
+
+                getDataArr = rd.reDa(s)[0];
+                ma.global.setListItems(rd.reDa(s)[1]);
+
                 Message message = new Message();
                 message.what = 1;
                 handler.sendMessage(message);

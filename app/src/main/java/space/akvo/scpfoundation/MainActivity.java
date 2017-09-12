@@ -3,6 +3,7 @@ package space.akvo.scpfoundation;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -36,7 +37,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     final String get_scp_url = "http://scp-wiki-cn.wikidot.com/printer--friendly/scp-";
     final String main_scp_url ="http://scp-wiki-cn.wikidot.com";
     String open_url;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public int listNum = 0;
     public Fragment nowFragment;
     public StoreBacks sbs;
-
+    public Global global;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +75,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStart(){
+        if (global!=null) {
+            global.clearList();
+        }
         super.onStart();
     }
+
+
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.toolbar,menu);
@@ -277,4 +283,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
 

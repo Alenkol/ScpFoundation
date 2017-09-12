@@ -1,36 +1,32 @@
 package space.akvo.scpfoundation;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ScrollingView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import space.akvo.scpfoundation.GestureListener;
 
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.callback.OnUrlClickListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by akvo on 2017/8/19.
@@ -56,14 +52,19 @@ public class ShowFragment extends Fragment {
     public boolean canAdd;
     private SwipeRefreshLayout swipeRefreshLayout;
     public ScrollViewX svx;
+    private String scps;
+    private String scpt;
+    private boolean canNext = true;
 
     public void onStart() {
 
         super.onStart();
+
         progressBar = getActivity().findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         ma = (MainActivity) getActivity();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
+        scp_detail_tx.setOnTouchListener(new MyGestureListener(getContext()));
 
         svx = getActivity().findViewById(R.id.scroll);
         svx.setOnScrollListener(new ScrollViewX.OnScrollListener() {
@@ -99,6 +100,10 @@ public class ShowFragment extends Fragment {
     }
 
     public void getScpDetail() {
+        if (canNext) {
+            scps = open_url.replace(main_scp_url + "/", "");
+            scpt = ma.toolbar.getTitle().toString();
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,6 +168,7 @@ public class ShowFragment extends Fragment {
                     ma.showSnackBar(snackBar);
                     break;
                 case 1:
+                    svx.scrollTo(0,0);
                     canAdd = true;
                     progressBar.setVisibility(View.GONE);
                     svx.setVisibility(View.VISIBLE);
@@ -170,6 +176,7 @@ public class ShowFragment extends Fragment {
                             urlClick(new OnUrlClickListener() {
                                 @Override
                                 public boolean urlClicked(String url) {
+                                    canNext = false;
                                     if (url.contains("footnoteref-")) {
                                         new AlertDialog.Builder(getContext())
                                                 .setMessage(footer_list.get(Integer.parseInt(url.replace("footnoteref-", "")) - 1).toString()).show();
@@ -204,7 +211,43 @@ public class ShowFragment extends Fragment {
         open_url = a;
     }
 
-//    public void sRefresh(){
-//
-//    }
+    private class MyGestureListener extends GestureListener {
+        public MyGestureListener(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean left() {
+            canNext = true;
+            List<String> list = ma.global.getListItems();
+            int a = list.indexOf(scps+"!@"+scpt);
+            if (a+1==list.size()){
+                snackBar = Snackbar.make(ma.toolbar, "已经到达最后一项！", Snackbar.LENGTH_LONG);
+                ma.showSnackBar(snackBar);
+            }else {
+                open_url = main_scp_url + "/" + (list.get(a + 1).split("!@")[0]);
+                ma.changeToolbarText((list.get(a + 1).split("!@")[1]));
+                getScpDetail();
+            }
+            return super.left();
+        }
+
+        @Override
+        public boolean right() {
+            canNext = true;
+            List<String> list = ma.global.getListItems();
+            int a = list.indexOf(scps+"!@"+scpt);
+            if (a==0){
+                snackBar = Snackbar.make(ma.toolbar, "这是第一项哦~", Snackbar.LENGTH_LONG);
+                ma.showSnackBar(snackBar);
+            }else {
+                open_url = main_scp_url + "/" + (list.get(a - 1).split("!@")[0]);
+                ma.changeToolbarText((list.get(a - 1).split("!@")[1]));
+                getScpDetail();
+            }
+            return super.right();
+        }
+    }
+
 }
+
