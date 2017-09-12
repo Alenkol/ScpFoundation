@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onStart(){
         super.onStart();
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                                 new SecondaryDrawerItem().withName("SCP系列IV").withIdentifier(14),
                                 new SecondaryDrawerItem().withName("SCP-CN系列").withIdentifier(15)
                         ),
-                        new PrimaryDrawerItem().withName("基金会故事").withIdentifier(2),
                         new PrimaryDrawerItem().withName("设定中心").withIdentifier(3),
                         new PrimaryDrawerItem().withName("关于基金会").withIdentifier(4)
                 )
@@ -192,35 +190,35 @@ public class MainActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 11) {
-                                listNum = 0;
+                                main_fragment.setListNum(0);
                                 main_fragment.toolbarText = "SCP系列I";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列I");
-                                main_fragment.setList("select * from Y limit 264,948");
+                                main_fragment.setList();
                             } else if(drawerItem.getIdentifier() == 12){
-                                listNum = 1;
+                                main_fragment.setListNum(1);
                                 main_fragment.toolbarText = "SCP系列II";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列II");
-                                main_fragment.setList("select * from Y limit 1212,824");
+                                main_fragment.setList();
                             }else if(drawerItem.getIdentifier() == 13){
-                                listNum = 3;
+                                main_fragment.setListNum(2);
                                 main_fragment.toolbarText = "SCP系列III";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列III");
-                                main_fragment.setList("select * from Y limit 2036,433");
+                                main_fragment.setList();
                             } else if(drawerItem.getIdentifier() == 14){
-                                listNum = 4;
+                                main_fragment.setListNum(3);
                                 main_fragment.toolbarText = "SCP系列IV";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP系列IV");
-                                main_fragment.setList("select * from Y limit 2469,92");
+                                main_fragment.setList();
                             }else if(drawerItem.getIdentifier() == 15){
-                                listNum = 5;
+                                main_fragment.setListNum(4);
                                 main_fragment.toolbarText = "SCP-CN系列";
                                 changeFragment(main_fragment);
                                 changeToolbarText("SCP-CN系列");
-                                main_fragment.setList("select * from Y limit 0,264");
+                                main_fragment.setList();
                             }else if (drawerItem.getIdentifier() == 4) {
                                 aboutFragment = new AboutFragment();
                                 aboutFragment.toolbarText = "关于基金会";

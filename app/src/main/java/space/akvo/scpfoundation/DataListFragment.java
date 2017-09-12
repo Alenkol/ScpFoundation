@@ -25,7 +25,8 @@ public class DataListFragment extends Fragment {
     private ScpAdapter sa;
     private ListView lv;
     private readDatabase rd;
-    private String s;
+    private int listNum = 0;
+    public String s;
     private ArrayList getDataArr;
     private Handler handler;
     public String toolbarText;
@@ -35,9 +36,11 @@ public class DataListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_data_list,container,false);
         lv = view.findViewById(R.id.scp_list);
-        setList("select * from Y limit 264,948");
+        //setList("select * from Y limit 264,948");
         ma = (MainActivity)getActivity();
+        //listNum = ma.listNum;
         ma.backState = 0;
+        setList();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -80,8 +83,27 @@ public class DataListFragment extends Fragment {
         ma.changeToolbarText(toolbarText);
     }
 
-    public void setList(final String s){
-        this.s = s;
+    public void setList(){
+
+        switch(listNum){
+            case 0:
+                this.s = "select * from Y limit 264,948";
+                break;
+            case 1:
+                this.s = "select * from Y limit 1212,824";
+                break;
+            case 2:
+                this.s = "select * from Y limit 2036,433";
+                break;
+            case 3:
+                this.s = "select * from Y limit 2469,92";
+                break;
+            case 4:
+                this.s = "select * from Y limit 0,264";
+                break;
+            default:
+                break;
+        }
         scpList.clear();
         rd = new readDatabase();
         new Thread(new Runnable() {
@@ -96,6 +118,7 @@ public class DataListFragment extends Fragment {
 
     }
 
-
-
+    public void setListNum(int num){
+        this.listNum = num;
+    }
 }

@@ -96,7 +96,6 @@ public class ShowFragment extends Fragment {
         getScpDetail();
 
         ma.sbs.addBack(ma.toolbar.getTitle().toString(), open_url);
-        System.out.println(ma.sbs.getAllUrls()+"\n"+ma.sbs.getAllTitles());
     }
 
     public void getScpDetail() {
@@ -137,6 +136,7 @@ public class ShowFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
                 scp_detail_tx.setText("");
                 getScpDetail();
             }
