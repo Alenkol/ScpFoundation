@@ -10,14 +10,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ScrollingView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.callback.OnUrlClickListener;
@@ -51,14 +54,42 @@ public class ShowFragment extends Fragment {
     public Message message;
     public Snackbar snackBar;
     public boolean canAdd;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    public ScrollViewX svx;
 
     public void onStart() {
-        progressBar = getActivity().findViewById(R.id.progressBar);
-        scrollView = getActivity().findViewById(R.id.scroll);
+
         super.onStart();
+        progressBar = getActivity().findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         ma = (MainActivity) getActivity();
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
+
+        svx = getActivity().findViewById(R.id.scroll);
+        svx.setOnScrollListener(new ScrollViewX.OnScrollListener() {
+            @Override
+            public void onScrollChanged(int x, int y, int oldX, int oldY) {
+            }
+
+            @Override
+            public void onScrollStopped() {
+                if (svx.isAtTop()) {
+                    swipeRefreshLayout.setEnabled(true);
+                } else if (svx.isAtBottom()) {
+                    snackBar = Snackbar.make(ma.toolbar, "别扯了，到底了~", Snackbar.LENGTH_INDEFINITE);
+                    ma.showSnackBar(snackBar);
+                    System.out.println("bottom");
+                }
+                else {
+                    swipeRefreshLayout.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onScrolling() {
+            }
+        });
+
         ma.setState(1);
         ma.changeToolbarText(toolbarText);
         ma.sbs = new StoreBacks();
@@ -82,6 +113,8 @@ public class ShowFragment extends Fragment {
                     message.what = 1;
                     if (ma.sbs.getSize()>1){
                         ma.setState(2);
+                    }else {
+                        ma.setState(1);
                     }
                 } else {
                     ma.setState(0);
@@ -91,6 +124,7 @@ public class ShowFragment extends Fragment {
                 handler.sendMessage(message);
             }
         }).start();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -98,6 +132,16 @@ public class ShowFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_scp_detail, container, false);
         Bundle bundle = getArguments();
         open_url = new String(bundle.getString("url"));
+
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                scp_detail_tx.setText("");
+                getScpDetail();
+            }
+        });
+
         return view;
     }
 
@@ -105,12 +149,12 @@ public class ShowFragment extends Fragment {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            swipeRefreshLayout.setEnabled(true);
             switch (msg.what) {
                 case 0:
-                    scrollView.setVisibility(View.GONE);
+                    scp_detail_tx.setText("");
                     progressBar.setVisibility(View.GONE);
-                    //richText = RichText.from("").into(scp_detail_tx);
-                    snackBar = Snackbar.make(ma.toolbar, "网络连接失败！", Snackbar.LENGTH_INDEFINITE).setAction("刷新", new View.OnClickListener() {
+                    snackBar = Snackbar.make(ma.toolbar, "网络连接失败！", Snackbar.LENGTH_LONG).setAction("刷新", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             getScpDetail();
@@ -121,7 +165,7 @@ public class ShowFragment extends Fragment {
                 case 1:
                     canAdd = true;
                     progressBar.setVisibility(View.GONE);
-                    scrollView.setVisibility(View.VISIBLE);
+                    svx.setVisibility(View.VISIBLE);
                     richText = RichText.from(scp_detail).
                             urlClick(new OnUrlClickListener() {
                                 @Override
@@ -138,7 +182,7 @@ public class ShowFragment extends Fragment {
                                         }
                                         canAdd = false;
                                         progressBar.setVisibility(View.VISIBLE);
-                                        scrollView.setVisibility(View.GONE);
+                                        svx.setVisibility(View.GONE);
                                         getScpDetail();
                                     }
                                     return false;
@@ -159,4 +203,8 @@ public class ShowFragment extends Fragment {
     public void setOpenUrl(String a) {
         open_url = a;
     }
+
+//    public void sRefresh(){
+//
+//    }
 }
