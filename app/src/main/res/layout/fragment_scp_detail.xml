@@ -11,18 +11,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <space.akvo.scpfoundation.ScrollViewX
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
             android:layout_margin="20dp"
-            android:text="scp_detail_fragment"
             android:id="@+id/scp_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </ScrollView>
+    </space.akvo.scpfoundation.ScrollViewX>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

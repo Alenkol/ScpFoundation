@@ -255,8 +255,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (backState == 0) {
             long mNowTime = System.currentTimeMillis();
-            if ((mNowTime - mPressedTime) > 3000) {
-                //Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            if ((mNowTime - mPressedTime) > 2000) {
                 snackBar = Snackbar.make(toolbar,"再按一次退出程序",Snackbar.LENGTH_SHORT);
                 showSnackBar(snackBar);
                 mPressedTime = mNowTime;
