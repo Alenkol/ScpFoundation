@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity{
     final String get_scp_url = "http://scp-wiki-cn.wikidot.com/printer--friendly/scp-";
@@ -58,12 +61,14 @@ public class MainActivity extends AppCompatActivity{
     public Fragment nowFragment;
     public StoreBacks sbs;
     public Global global;
+    public FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
+        fab = (FloatingActionButton)findViewById(R.id.FloatingButton);
         setSupportActionBar(toolbar);
         sbs = new StoreBacks();
         main_fragment = new DataListFragment();

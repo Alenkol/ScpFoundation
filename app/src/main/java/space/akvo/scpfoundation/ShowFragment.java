@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import space.akvo.scpfoundation.GestureListener;
+//import space.akvo.scpfoundation.GestureListener;
 
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.callback.OnUrlClickListener;
@@ -55,17 +55,38 @@ public class ShowFragment extends Fragment {
     private String scps;
     private String scpt;
     private boolean canNext = true;
+    private List<String> listItems;
 
     public void onStart() {
-
         super.onStart();
-
-        progressBar = getActivity().findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         ma = (MainActivity) getActivity();
+        swipeRefreshLayout.setRefreshing(true);
         scp_detail_tx = getActivity().findViewById(R.id.scp_detail);
-        scp_detail_tx.setOnTouchListener(new MyGestureListener(getContext()));
+        scp_detail_tx.setText("");
+        ma.changeToolbarText(toolbarText);
+        getScpDetail();
 
+        if (listItems!=null){
+            if (ma.global==null){
+                ma.global = new Global();
+            }
+            ma.global.setListItems(listItems);
+            listItems =null;
+        }
+
+        ma.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slideLeft();
+            }
+        });
+        ma.fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                slideRight();
+                return true;
+            }
+        });
         svx = getActivity().findViewById(R.id.scroll);
         svx.setOnScrollListener(new ScrollViewX.OnScrollListener() {
             @Override
@@ -92,9 +113,7 @@ public class ShowFragment extends Fragment {
         });
 
         ma.setState(1);
-        ma.changeToolbarText(toolbarText);
         ma.sbs = new StoreBacks();
-        getScpDetail();
 
         ma.sbs.addBack(ma.toolbar.getTitle().toString(), open_url);
     }
@@ -128,7 +147,6 @@ public class ShowFragment extends Fragment {
                 handler.sendMessage(message);
             }
         }).start();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -154,6 +172,7 @@ public class ShowFragment extends Fragment {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
             switch (msg.what) {
                 case 0:
@@ -170,7 +189,6 @@ public class ShowFragment extends Fragment {
                 case 1:
                     svx.scrollTo(0,0);
                     canAdd = true;
-                    progressBar.setVisibility(View.GONE);
                     svx.setVisibility(View.VISIBLE);
                     richText = RichText.from(scp_detail).
                             urlClick(new OnUrlClickListener() {
@@ -211,42 +229,38 @@ public class ShowFragment extends Fragment {
         open_url = a;
     }
 
-    private class MyGestureListener extends GestureListener {
-        public MyGestureListener(Context context) {
-            super(context);
+    public void slideLeft(){
+        canNext = true;
+        List<String> list = ma.global.getListItems();
+        int a = list.indexOf(scps+"!@"+scpt);
+        if (a+1==list.size()){
+            snackBar = Snackbar.make(ma.toolbar, "已经到达最后一项！", Snackbar.LENGTH_LONG);
+            ma.showSnackBar(snackBar);
+        }else {
+            open_url = main_scp_url + "/" + (list.get(a + 1).split("!@")[0]);
+            ma.changeToolbarText((list.get(a + 1).split("!@")[1]));
+            getScpDetail();
         }
+    }
 
-        @Override
-        public boolean left() {
-            canNext = true;
-            List<String> list = ma.global.getListItems();
-            int a = list.indexOf(scps+"!@"+scpt);
-            if (a+1==list.size()){
-                snackBar = Snackbar.make(ma.toolbar, "已经到达最后一项！", Snackbar.LENGTH_LONG);
-                ma.showSnackBar(snackBar);
-            }else {
-                open_url = main_scp_url + "/" + (list.get(a + 1).split("!@")[0]);
-                ma.changeToolbarText((list.get(a + 1).split("!@")[1]));
-                getScpDetail();
-            }
-            return super.left();
+    public void slideRight(){
+        canNext = true;
+        List<String> list = ma.global.getListItems();
+        int a = list.indexOf(scps+"!@"+scpt);
+        if (a==0){
+            snackBar = Snackbar.make(ma.toolbar, "这是第一项哦~", Snackbar.LENGTH_LONG);
+            ma.showSnackBar(snackBar);
+        }else {
+            open_url = main_scp_url + "/" + (list.get(a - 1).split("!@")[0]);
+            ma.changeToolbarText((list.get(a - 1).split("!@")[1]));
+            getScpDetail();
         }
+    }
 
-        @Override
-        public boolean right() {
-            canNext = true;
-            List<String> list = ma.global.getListItems();
-            int a = list.indexOf(scps+"!@"+scpt);
-            if (a==0){
-                snackBar = Snackbar.make(ma.toolbar, "这是第一项哦~", Snackbar.LENGTH_LONG);
-                ma.showSnackBar(snackBar);
-            }else {
-                open_url = main_scp_url + "/" + (list.get(a - 1).split("!@")[0]);
-                ma.changeToolbarText((list.get(a - 1).split("!@")[1]));
-                getScpDetail();
-            }
-            return super.right();
-        }
+    public void onPause(){
+        listItems = ma.global.copyList();
+        toolbarText = ma.toolbar.getTitle().toString();
+        super.onPause();
     }
 
 }

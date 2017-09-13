@@ -24,4 +24,8 @@ public class Global {
             this.listItems = null;
         }
     }
+
+    public List copyList(){
+        return listItems;
+    }
 }

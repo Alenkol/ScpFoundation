@@ -130,4 +130,16 @@ public class DataListFragment extends Fragment {
     public void setListNum(int num){
         this.listNum = num;
     }
+
+    public void reSetList(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (ma.global == null){
+                    ma.global = new Global();
+                }
+                ma.global.setListItems(rd.reDa(s)[1]);
+            }
+        }).start();
+    }
 }
